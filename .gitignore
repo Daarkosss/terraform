@@ -1,1 +1,4 @@
 *.pem
+docker_password.txt
+.terraform
+*.backup
