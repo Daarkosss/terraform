@@ -80,7 +80,7 @@ resource "aws_security_group" "ec2_security_group" {
 }
 
 
-# use data source to get a registered amazon linux 2 ami - commented due to lack of permission
+# use data source to get a registered amazon linux 2 ami
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners      = ["amazon"]
@@ -106,9 +106,10 @@ resource "aws_instance" "ec2_instance" {
   key_name               = "tic_tac_key"
 
   tags = {
-    Name = "Tic-Tac-Toe-5"
+    Name = "Tic-Tac-Toe"
   }
 }
+
 
 # an empty resource block
 resource "null_resource" "name" {
@@ -127,12 +128,8 @@ resource "null_resource" "name" {
    source      = "./docker_password.txt"
    destination = "/home/ec2-user/docker_password.txt"
 
-   }
-  # copy the dockerfile from your computer to the ec2 instance 
-  provisioner "file" {
-    source      = "docker-compose.yml"
-    destination = "/home/ec2-user/docker-compose.yml"
   }
+
 
   # copy the deployment.sh from your computer to the ec2 instance 
   provisioner "file" {
@@ -152,9 +149,4 @@ resource "null_resource" "name" {
   # wait for ec2 to be created
   depends_on = [aws_instance.ec2_instance]
 
-}
-
-# print the url of the container
-output "container_url" {
-  value = join("", ["http://", aws_instance.ec2_instance.public_dns])
 }

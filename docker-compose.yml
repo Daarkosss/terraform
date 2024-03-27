@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./tic_tac_toe_backend # Path to backend folder
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Port mapping (host:container)
+
+  frontend:
+    build:
+      context: ./tic_tac_toe_frontend # Path to frontend folder
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Port mapping (host:container)
+    depends_on:
+      - backend
