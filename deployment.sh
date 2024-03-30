@@ -29,4 +29,4 @@ sudo docker run -d --restart unless-stopped -p 8080:8080 daarkosss/tic_tac_toe_t
 sleep 10
 
 # Run the frontend container
-sudo docker run -d --restart unless-stopped -p 3000:80 daarkosss/tic_tac_toe_terraform:frontend
+sudo docker run -d --restart unless-stopped -p 80:80 daarkosss/tic_tac_toe_terraform:frontend
