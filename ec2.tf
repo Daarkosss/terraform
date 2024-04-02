@@ -27,21 +27,10 @@ resource "aws_subnet" "custom_subnet" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "custom_subnet_1"
+    Name = "custom_subnet"
   }
 }
 
-# Additional subnet in different availability zone (required for ALB)
-resource "aws_subnet" "custom_subnet_2" {
-  vpc_id            = aws_vpc.custom_vpc.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = data.aws_availability_zones.available_zones.names[1] # Użyj innej strefy dostępności
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = "custom_subnet_2"
-  }
-}
 
 resource "aws_internet_gateway" "custom_igw" {
     vpc_id = aws_vpc.custom_vpc.id
@@ -70,62 +59,10 @@ resource "aws_route_table_association" "a" {
 }
 
 
-resource "aws_security_group" "alb_security_group" {
-  name        = "alb-security-group"
-  description = "Security group for ALB allowing HTTP access"
-  vpc_id      = aws_vpc.custom_vpc.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "ALB SG"
-  }
-}
-
-
-# Define Application Load Balancer
-resource "aws_lb" "frontend_lb" {
-  name               = "frontend-load-balancer"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_security_group.id]
-  subnets            = [aws_subnet.custom_subnet.id, aws_subnet.custom_subnet_2.id] # use both subnets
-}
-
-resource "aws_lb_listener" "http_listener" {
-  load_balancer_arn = aws_lb.frontend_lb.arn
-  port              = 80
-  protocol          = "HTTP"
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.frontend_tg.arn
-  }
-}
-
-resource "aws_lb_target_group" "frontend_tg" {
-  name     = "frontend-target-group"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.custom_vpc.id
-}
-
-
 # create security group for the ec2 instance
 resource "aws_security_group" "ec2_security_group" {
   name        = "ec2 security group"
-  description = "allow access on ports 80, 22, 3000, and 8080"
+  description = "allow access on ports 80, 22 and 8080"
   vpc_id      = aws_vpc.custom_vpc.id
 
   ingress {
@@ -163,16 +100,6 @@ resource "aws_security_group" "ec2_security_group" {
   tags = {
     Name = "docker server sg"
   }
-}
-
-# Allow traffic from ALB to EC2 on port 3000
-resource "aws_security_group_rule" "allow_from_alb" {
-  type              = "ingress"
-  from_port         = 3000
-  to_port           = 3000
-  protocol          = "tcp"
-  security_group_id = aws_security_group.ec2_security_group.id
-  source_security_group_id = aws_security_group.alb_security_group.id
 }
 
 
