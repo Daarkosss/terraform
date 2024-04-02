@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Before you run this script, run docker-compose and push images to docker hub
+# docker-compose up --build
 # docker tag tic_tac_toe-frontend daarkosss/tic_tac_toe_terraform:frontend
 # docker push daarkosss/tic_tac_toe_terraform:frontend
 # docker tag tic_tac_toe-backend daarkosss/tic_tac_toe_terraform:backend
