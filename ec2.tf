@@ -3,6 +3,7 @@ provider "aws" {
   region = "us-east-1"  # Set the region where the resources will be created
 }
 
+
 # Create a custom VPC (Virtual Private Cloud) if it does not already exist
 resource "aws_vpc" "custom_vpc" {
   cidr_block           = "10.0.0.0/16"  # Define the IP address range for the VPC
@@ -14,10 +15,12 @@ resource "aws_vpc" "custom_vpc" {
   }
 }
 
+
 # Fetch data about the available availability zones in the region
 data "aws_availability_zones" "available_zones" {
   # No filters are applied, it fetches all availability zones
 }
+
 
 # Create a subnet within the custom VPC
 resource "aws_subnet" "custom_subnet" {
@@ -31,6 +34,7 @@ resource "aws_subnet" "custom_subnet" {
   }
 }
 
+
 # Create an Internet Gateway and attach it to the VPC for internet access
 resource "aws_internet_gateway" "custom_igw" {
   vpc_id = aws_vpc.custom_vpc.id  # Associate the IGW with the custom VPC
@@ -39,6 +43,7 @@ resource "aws_internet_gateway" "custom_igw" {
     Name = "custom_igw"  # Set a name tag for the Internet Gateway
   }
 }
+
 
 # Create a route table for the VPC to define rules for traffic routing
 resource "aws_route_table" "custom_route_table" {
@@ -54,11 +59,13 @@ resource "aws_route_table" "custom_route_table" {
   }
 }
 
+
 # Associate the subnet with the route table to enable routing
 resource "aws_route_table_association" "a" {
   subnet_id       = aws_subnet.custom_subnet.id
   route_table_id  = aws_route_table.custom_route_table.id
 }
+
 
 # Create a security group for the EC2 instance with specific rules
 resource "aws_security_group" "ec2_security_group" {
@@ -106,6 +113,7 @@ resource "aws_security_group" "ec2_security_group" {
   }
 }
 
+
 # Fetch data about the Amazon Linux 2 AMI
 data "aws_ami" "amazon_linux_2" {
   most_recent = true  # Fetch the most recent AMI
@@ -122,6 +130,7 @@ data "aws_ami" "amazon_linux_2" {
   }
 }
 
+
 # Launch an EC2 instance with the specified settings
 resource "aws_instance" "ec2_instance" {
   ami                    = data.aws_ami.amazon_linux_2.id  # Use the fetched Amazon Linux 2 AMI
@@ -134,6 +143,7 @@ resource "aws_instance" "ec2_instance" {
     Name = "Tic-Tac-Toe"  # Set a name tag for the EC2 instance
   }
 }
+
 
 # A null resource block to run provisioning scripts on the EC2 instance
 resource "null_resource" "name" {
