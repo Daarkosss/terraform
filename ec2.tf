@@ -4,9 +4,9 @@ provider "aws" {
 }
 
 
-# Create a custom VPC (Virtual Private Cloud) if it does not already exist
+# Create a custom VPC (Virtual Private Cloud) to place our instance on it
 resource "aws_vpc" "custom_vpc" {
-  cidr_block           = "10.0.0.0/16"  # Define the IP address range for the VPC
+  cidr_block           = "10.0.0.0/16"  # Define the IP address range for the VPC (from 10.0.0.0 to 10.0.255.255)
   enable_dns_support   = true           # Enable DNS support within the VPC
   enable_dns_hostnames = true           # Enable DNS hostnames within the VPC
 
@@ -25,7 +25,7 @@ data "aws_availability_zones" "available_zones" {
 # Create a subnet within the custom VPC
 resource "aws_subnet" "custom_subnet" {
   vpc_id            = aws_vpc.custom_vpc.id  # Associate the subnet with the custom VPC
-  cidr_block        = "10.0.1.0/24"          # Define the IP address range for the subnet
+  cidr_block        = "10.0.1.0/24"          # Define the IP address range for the subnet (from 10.0.1.0 to 10.0.1.255)
   availability_zone = data.aws_availability_zones.available_zones.names[0]  # Use the first available AZ
   map_public_ip_on_launch = true  # Automatically assign public IP to instances launched in this subnet
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "custom_subnet" {
 }
 
 
-# Create an Internet Gateway and attach it to the VPC for internet access
+# Create an Internet Gateway and attach it to the VPC, used to enable communication between resources in the VPC and the Internet
 resource "aws_internet_gateway" "custom_igw" {
   vpc_id = aws_vpc.custom_vpc.id  # Associate the IGW with the custom VPC
 
@@ -45,12 +45,13 @@ resource "aws_internet_gateway" "custom_igw" {
 }
 
 
-# Create a route table for the VPC to define rules for traffic routing
+# Create a route table for the VPC to define rules for traffic routing,
+# determines how network traffic is routed between subnets in a VPC, as well as between the VPC and the Internet.
 resource "aws_route_table" "custom_route_table" {
   vpc_id = aws_vpc.custom_vpc.id  # Associate the route table with the custom VPC
 
   route {
-    cidr_block = "0.0.0.0/0"  # Define a default route (to route all traffic)
+    cidr_block = "0.0.0.0/0"  # Define a default route (to route all traffic). All traffic directed to any address outside the VPC should be redirected to the Internet Gateway
     gateway_id = aws_internet_gateway.custom_igw.id  # Specify the IGW as the gateway
   }
 
@@ -121,7 +122,7 @@ data "aws_ami" "amazon_linux_2" {
 
   filter {
     name   = "owner-alias"
-    values = ["amazon"]
+    values = ["amazon"] # The same as above, maybe not necessary
   }
 
   filter {
@@ -145,7 +146,7 @@ resource "aws_instance" "ec2_instance" {
 }
 
 
-# A null resource block to run provisioning scripts on the EC2 instance
+# A null resource block to run necessary scripts on the EC2 instance
 resource "null_resource" "name" {
   # SSH connection details for the EC2 instance
   connection {
