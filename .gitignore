@@ -2,3 +2,4 @@
 docker_password.txt
 .terraform
 *.backup
+*.zip

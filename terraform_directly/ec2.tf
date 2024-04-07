@@ -115,7 +115,7 @@ resource "aws_security_group" "ec2_security_group" {
 }
 
 
-# Fetch data about the Amazon Linux 2 AMI
+# Fetch data about the Amazon Linux 2 AMI (Amazon Machine Image), find the newest image for Amazon Linux 2
 data "aws_ami" "amazon_linux_2" {
   most_recent = true  # Fetch the most recent AMI
   owners      = ["amazon"]  # Filter to only include AMIs owned by Amazon
