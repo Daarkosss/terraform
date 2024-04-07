@@ -5,7 +5,7 @@ Najbardziej ogólnie, ku wyborze Elastic Beanstalk skłania potrzeba prostego i 
 
 ## Przyczyny
 - Elastic Beanstalk buduje aplikację za nas. My przesyłamy kod, a Elastic Beanstalk zajmuje się resztą.
-- Elastic Beanstalk obsługuje tylko niektóre języki programowania aplikacji i platformy wdrożeniowe. Fargate może uruchomić dowolny typ aplikacji, która może działać jako kontener, co oznacza praktycznie każdą aplikację. W praktyce jednak, używając jako platformę Dockera, możemy wdrożyć dowolną aplikację, niezależnie od użytych technologii, potrzebujemy jedynie dobrze skonfigurowany Dockerfile.
+- Elastic Beanstalk obsługuje tylko niektóre języki programowania aplikacji i platformy wdrożeniowe. Fargate może uruchomić dowolny typ aplikacji, która może działać jako kontener, co oznacza praktycznie każdą aplikację. W praktyce jednak, używając Elastic Beanstalk z platformą Dockera, możemy wdrożyć dowolną aplikację, niezależnie od użytych technologii, potrzebujemy jedynie dobrze skonfigurowany Dockerfile.
 - Elastic Beanstalk automatycznie zarządza szczegółami infrastruktury, takimi jak skalowanie, monitorowanie i aktualizacje.
 - Elastic Beanstalk pobiera opłaty za instancje EC2 wybrane do hostowania aplikacji. Z kolei Fargate pobiera opłatę godzinową za każdy wirtualny procesor używany przez Twoją aplikację, a także za ilość zużywanej przez nią pamięci i miejsca.
 
