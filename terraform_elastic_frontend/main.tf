@@ -56,6 +56,8 @@ resource "aws_elastic_beanstalk_environment" "my_env" {
     value     = "SingleInstance"  # Environment type (e.g., SingleInstance, LoadBalanced)
   }
 
+  # By setting MinSize and MaxSize, you define the scaling boundaries for environment, ensuring that it can automatically scale within these limits 
+  # based on the performance requirements of your application. This helps in managing the cost while ensuring availability and performance.
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"

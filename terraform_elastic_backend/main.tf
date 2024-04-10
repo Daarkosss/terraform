@@ -18,7 +18,7 @@ resource "aws_iam_instance_profile" "eb_instance_profile" {
 }
 
 
-# Provision an S3 bucket to store the application's version source code
+# Create an S3 bucket to store the application's version source code
 resource "aws_s3_bucket" "app_version_bucket" {
   bucket = "tic-tac-toe-backend-bucket"  # Name of the S3 bucket for storing application versions
 }
@@ -54,6 +54,8 @@ resource "aws_elastic_beanstalk_environment" "my_env" {
     value     = "SingleInstance"  # Environment type, could be LoadBalanced or SingleInstance
   }
 
+  # By setting MinSize and MaxSize, you define the scaling boundaries for environment, ensuring that it can automatically scale within these limits 
+  # based on the performance requirements of your application. This helps in managing the cost while ensuring availability and performance.
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
